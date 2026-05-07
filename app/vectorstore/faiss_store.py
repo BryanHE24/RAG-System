@@ -22,11 +22,13 @@ class FAISSVectorStore:
         """
         Add embeddings and corresponding chunk metadata.
         """
+        # convert embeddings to numpy array
+        vectors = np.array(embeddings).astype("float32") 
 
-        vectors = np.array(embeddings).astype("float32")
-
+        # add embeddings to the FAISS index
         self.index.add(vectors)
 
+        # add metadata to the FAISS index
         for chunk in chunks:
             self.metadata.append(chunk)
 
@@ -39,13 +41,15 @@ class FAISSVectorStore:
         """
         Perform similarity search.
         """
-
+        # convert query embedding to numpy array
         query_vector = np.array([query_embedding]).astype("float32")
-
+    
+        # search for similar embeddings
         distances, indices = self.index.search(query_vector, top_k)
 
         results = []
-
+    
+        # iterate over similar embeddings
         for idx, distance in zip(indices[0], distances[0]):
             if idx == -1:
                 continue
