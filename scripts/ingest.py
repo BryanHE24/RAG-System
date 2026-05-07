@@ -11,7 +11,10 @@ if __name__ == "__main__":
     # create ingestion pipeline from pipeline.py
     pipeline = IngestionPipeline(
         data_dir="data/raw",
-        index_path="storage/faiss_index"
+        index_path="storage/faiss_index",
+        # chunk size and overlap can be adjusted for better results
+        chunk_size=500,
+        overlap=100
     )
 
     pipeline.run() # run the ingestion pipeline

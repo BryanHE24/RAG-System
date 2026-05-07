@@ -20,28 +20,34 @@ def chunk_text(
     
         # split the document into overlapping chunks
         start = 0
-        chunk_id = 0
+        chunk_index = 0
 
         # while the start index is less than the length of the text
         while start < len(text):
             end = start + chunk_size
 
-            chunk_text = text[start:end]         
+            # Prevent cutting words in half, ugly chunks, poorer embeddings
+            if end < len(text):
+                while end < len(text) and text[end] != " ":
+                    end += 1
+            # get the chunk content
+            chunk_content = text[start:end].strip()      
 
             # create a chunk with id, text, and metadata
             chunk = {
-                "id": f"{doc_id}_{chunk_id}",
-                "text": chunk_text,
+                "id": f"{doc_id}_{chunk_index}",
+                "text": chunk_content,
                 "metadata": {
                     "source": doc["metadata"]["source"],
                     "parent_id": doc_id,
-                    "chunk_index": chunk_id
+                    "chunk_index": chunk_index,
+                    "chunk_size": len(chunk_content)
                 }
             }
-
-            chunks.append(chunk)
+            # add the chunk to the list of chunks
+            chunks.append(chunk)        
             # move the start index forward by chunk_size - overlap
-            start += chunk_size - overlap 
-            chunk_id += 1
+            start += chunk_size - overlap
+            chunk_index += 1
 
     return chunks

@@ -8,15 +8,21 @@ logger = setup_logger(__name__) # get logger
 
 # define the ingestion pipeline class
 class IngestionPipeline:
-    # initialize the ingestion pipeline
+    # initialize the ingestion pipeline with dinamic chunk size and overlap
     def __init__(
         self,
         data_dir: str,
-        index_path: str
+        index_path: str,
+        chunk_size: int = 500,
+        overlap: int = 100
     ):  
         # set the data directory and index path
         self.data_dir = data_dir
         self.index_path = index_path
+
+        # set the chunk size and overlap
+        self.chunk_size = chunk_size
+        self.overlap = overlap
 
         # create OpenAI embedder
         self.embedder = OpenAIEmbedder()
@@ -33,7 +39,11 @@ class IngestionPipeline:
         docs = load_txt_documents(self.data_dir)
 
         # Chunk documents
-        chunks = chunk_text(docs)
+        chunks = chunk_text(
+            docs,
+            chunk_size=self.chunk_size,
+            overlap=self.overlap
+        )
 
         logger.info(f"Generated {len(chunks)} chunks")
 
