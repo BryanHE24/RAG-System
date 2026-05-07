@@ -9,11 +9,15 @@ from app.ingestion.loader import load_txt_documents
 from app.ingestion.chunker import chunk_text
 from app.embeddings.openai_embedder import OpenAIEmbedder
 from app.vectorstore.faiss_store import FAISSVectorStore
+from app.core.logging import setup_logger
 
+logger = setup_logger(__name__) # get logger
 
 # load all txt documents from data/raw directory
 if __name__ == "__main__":
+    # load all txt documents from data/raw directory
     docs = load_txt_documents("data/raw")
+    # chunk the documents
     chunks = chunk_text(docs)
 
     # extract texts from chunks
@@ -37,5 +41,5 @@ if __name__ == "__main__":
     # save the FAISS index and metadata
     vector_store.save("storage/faiss_index")
 
-    # print success message
-    print("FAISS index saved successfully")
+    # log the success message
+    logger.info("FAISS index saved successfully")

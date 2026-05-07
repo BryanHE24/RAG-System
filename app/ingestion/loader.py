@@ -2,6 +2,9 @@ import os
 import uuid
 from typing import List, Dict
 
+from app.core.logging import setup_logger
+
+logger = setup_logger(__name__) # get logger
 
 def load_txt_documents(data_dir: str) -> List[Dict]:
     """
@@ -16,6 +19,9 @@ def load_txt_documents(data_dir: str) -> List[Dict]:
         }
     """
     documents = []
+
+    # log the directory from which documents are being loaded
+    logger.info(f"Loading documents from: {data_dir}")
 
     # iterate over all files in the directory
     for filename in os.listdir(data_dir):
@@ -40,7 +46,14 @@ def load_txt_documents(data_dir: str) -> List[Dict]:
 
             documents.append(doc)
 
+            # log the document that was loaded
+            logger.info(f"Loaded document: {filename}")
+
         except Exception as e:
-            print(f"Error loading {filename}: {e}")
+            # log the error if the document could not be loaded
+            logger.error(f"Error loading {filename}: {e}")
+
+    # log the total number of documents loaded
+    logger.info(f"Total documents loaded: {len(documents)}")
 
     return documents
