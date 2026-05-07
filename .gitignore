@@ -1,4 +1,11 @@
 __pycache__/
 *.pyc
 .env
+
 storage/faiss_index/
+
+.venv/
+venv/
+
+.idea/
+.vscode/
